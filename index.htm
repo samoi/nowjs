@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Two ways communication</title>
+ 
+	<style type="text/css">
+ 
+		html,
+		body {
+			height: 100% ;
+			overflow: hidden ;
+			width: 100% ;
+			}
+ 
+		img {
+			left: 9px ;
+			position: absolute ;
+			top: 70px ;
+			}
+ 
+	</style>
+ 
+	<!-- We have this file stored explicitly. -->
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+ 
+	<!--
+		The NowJS HTTP augmentation will take care of routing
+		this - we don't actually have this physical file stored
+		at this file path.
+	-->
+	<script type="text/javascript" src="/nowjs/now.js"></script>
+</head>
+<body>
+ 
+	<h1>
+		experiment app by Sulaiman Al Hattab!
+	</h1>
+ 	<h3 id="mm"> Khalid, try to move the image around, it's also compatible with the iPhone touch screen for your own convenience! 
+ 	</h3>
+	<!--
+		This will be draggable. When this image drags, we are
+		going to sync the position of it across browsers.
+	-->
+	<img
+		id="olivia"
+		src="http://cdn-img.easyicon.cn/png/5548/554816.png"
+		width="320"
+		height="480"
+		alt="The very gorgeous Olivia Williams."
+		/>
+ 
+ 
+	<!-- Configure the client-side script. -->
+	<script type="text/javascript">
+ 
+		// Get a reference to the target draggable.
+		var olivia = $( "#olivia" );
+ 
+		// Get a reference to the body - this is the element on which
+		// we'll be tracking mouse movement once the draggable
+		// tracking has been turned on.
+		var body = $( "body" );
+
+
+ 		var mm = $("#mm");
+ 		mm.click(function(){
+ 			now.shall(now.uuid);
+ 			//$(this).append("Ok: " + now.uuid + ": ");
+ 			//.appendTo(now.uuid)
+ 		});
+ 
+var moveMe = function(e) {
+  e.preventDefault();
+  var orig = e.originalEvent;
+  var localOffs = {
+  	left: orig.changedTouches[0].pageX,
+  	top: orig.changedTouches[0].pageY
+  };
+  $(this).css(localOffs);
+  now.syncPosition( localOffs );
+};
+olivia.bind("touchstart touchmove", moveMe);
+
+		// On mouse-down, turn on draggability.
+		olivia.mousedown(
+			function( event ){
+				// Prevent the default behavior.
+				event.preventDefault();
+ 
+				// Get the current position of the mouse within the
+				// bounds of the target.
+				var localOffset = {
+					x: (event.pageX - olivia.position().left),
+					y: (event.pageY - olivia.position().top)
+				};
+ 
+				// Start tracking the mouse movement on the body.
+				// We're tracking on the body so that the mouse can
+				// move faster than the tracking.
+				body.mousemove(
+					function( event ){
+						// Create a new position object.
+						var newPosition = {
+							left: (event.pageX - localOffset.x),
+							top: (event.pageY - localOffset.y)
+						};
+ 
+						// Update the target position locally.
+						olivia.css( newPosition );
+ 
+						// Announce the updated position so that we
+						// can sync accross all clients with NowJS.
+						now.syncPosition( newPosition );
+					}
+				);
+			}
+		);
+ 
+ 
+		// On mouse-up, turn off draggability.
+		olivia.mouseup(
+			function( event ){
+				// Unbind the mousemove - no need to track movement
+				// once the mouse has been lifted.
+				body.unbind( "mousemove" );
+			}
+		);
+ 
+ 
+		// I allow the remove server to make a request to update the
+		// position of the target.
+		//
+		// NOTE: By defining this function in the NOW scope, it gives
+		// the server access to it as well.
+		now.updatePosition = function( newPosition ){
+ 
+			// Check to see if this client is in master mode; if so,
+			// we won't update the position as this client is
+			// actively updating its own position.
+			olivia.css( newPosition );
+ 
+		};
+		now.doit = function (uid){
+			//mm.
+			mm.append("Ok: " + uid + ". <br />");
+		}
+ 
+	</script>
+ 
+</body>
+</html>
