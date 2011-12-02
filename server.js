@@ -2,7 +2,7 @@ var html = require('fs').readFileSync(__dirname + '/index.htm');
 var server = require('http').createServer(function (req, res) {
     res.end(html);
 });
-server.listen(12494);
+server.listen(8080);
 
 var nowjs = require("now");
 var everyone = nowjs.initialize(server);
