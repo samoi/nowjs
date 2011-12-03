@@ -13,9 +13,9 @@
 			}
  
 		img {
-			left: 9px ;
+			
 			position: absolute ;
-			top: 70px ;
+			
 			}
  
 	</style>
@@ -32,12 +32,17 @@
 </head>
 <body>
  
+	<div id="dun">
+	
 	<h1>
 		experiment app by Sulaiman Al Hattab!
 	</h1>
-	<h4>Last updated Dec 2 @ 4:33 PM</h4>
+</div>
  	<h3 id="mm"> Try to move the image around, it's also compatible with the iPhone touch screen for your own convenience! 
  	</h3>
+ 	<h5 id="note">
+ 	A
+ 	</h5>
 	<!--
 		This will be draggable. When this image drags, we are
 		going to sync the position of it across browsers.
@@ -45,8 +50,6 @@
 	<img
 		id="olivia"
 		src="http://cdn-img.easyicon.cn/png/5548/554816.png"
-		width="320"
-		height="480"
 		alt="The very gorgeous Olivia Williams."
 		/>
  
@@ -63,16 +66,15 @@
 		// we'll be tracking mouse movement once the draggable
 		// tracking has been turned on.
 		var body = $( "body" );
-
+		var mm = $("#note");
 		$(document).ready(function() {
+			var val0 = mm.text();
+			var id = now.uuid;
+			var txt = "user#: ";
+			mm.text(val0+"\n"+txt+id);
 			now.shall(now.uuid);
 		});
- 		var mm = $("#mm");
- 		mm.click(function(){
- 			now.shall(now.uuid);
- 			//$(this).append("Ok: " + now.uuid + ": ");
- 			//.appendTo(now.uuid)
- 		});
+
  
 var moveMe = function(e) {
   e.preventDefault();
@@ -149,7 +151,7 @@ olivia.bind("touchstart touchmove", moveMe);
 		};
 		now.doit = function (uid){
 			//mm.
-			mm.append("Ok: " + uid + ". <br />");
+			mm.text("user #: " + uid + " has entered!. <br />");
 		}
  
 	</script>
